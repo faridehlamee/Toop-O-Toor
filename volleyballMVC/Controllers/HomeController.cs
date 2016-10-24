@@ -55,6 +55,7 @@ namespace volleyballMVC.Controllers
                     return RedirectToAction("SecureArea", "Home");
                 }
             }
+            ViewBag.errorLogin = "Oops! Your user name or password is incorrecet! ";
             return View();
         }
         [HttpGet]

@@ -22,11 +22,13 @@ namespace volleyballMVC.Controllers
         [HttpGet]
         public ActionResult Login()
         {
+            ViewBag.Login = "Login";
             return View();
         }
         [HttpPost]
         public ActionResult Login(Login login)
         {
+            ViewBag.errorLogin = "";
             // UserStore and UserManager manages data retreival.
             UserStore<IdentityUser> userStore = new UserStore<IdentityUser>();
             UserManager<IdentityUser> manager = new UserManager<IdentityUser>(userStore);
@@ -55,19 +57,20 @@ namespace volleyballMVC.Controllers
                     return RedirectToAction("SecureArea", "Home");
                 }
             }
-            ViewBag.errorLogin = "Oops! Your user name or password is incorrecet! ";
+            ViewBag.errorLogin = "Oops! You have entered invalid credentials. Please try again! ";
             return View();
         }
         [HttpGet]
         public ActionResult Register()
         {
-
+            ViewBag.Register = "Resister";
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Register(RegisteredUser newUser)
         {
+            ViewBag.Register = "";
             var userStore = new UserStore<IdentityUser>();
             var manager = new UserManager<IdentityUser>(userStore);
             var identityUser = new IdentityUser()
@@ -86,6 +89,7 @@ namespace volleyballMVC.Controllers
                 authenticationManager.SignIn(new AuthenticationProperties() { },
                                              userIdentity);
             }
+            ViewBag.Register = "Resister";
             return RedirectToAction("Index");
         }
         [Authorize]

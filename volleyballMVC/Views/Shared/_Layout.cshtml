@@ -20,6 +20,7 @@
 
     <link href="~/css/agency.min.css" rel="stylesheet" />
     <link href="~/css/agency.css" rel="stylesheet" />
+    <link href="~/css/style.css" rel="stylesheet" />
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -36,20 +37,42 @@
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                     <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
                 </button>
-                <a class="navbar-brand page-scroll" href="#page-top">Toop-O-Toor</a>
+                <a class="navbar-brand page-scroll" href="#page-top">Toop-O-Toor</a><span class="icon-toop-o-toor toop-3x page-scroll"></span>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="hidden">
-                        <a href="#page-top"></a>
-                    </li>
+                    
+                   @{
+                       if(ViewBag.Register != null)
+                       {
+                           <li><a href="@Url.Action("Index")"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                       }
+                       if (ViewBag.Login != null)
+                       {
+                           <li><a href="@Url.Action("Index")"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                       }
+
+                }
+                    
+                     @{
+                         if (Request.IsAuthenticated)
+                         {
+
+                            <li><a href="@Url.Action("Index")"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                            <li><span class="label label-info">@Html.Raw(User.Identity.Name)</span></li>
+                            <li><a href="@Url.Action("Logout")"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                            
+                        }
+                        else
+                        {
+                            <li><a href="@Url.Action("Login")"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                        }
+
+                    }
                     
                     <li>
-                        @Html.ActionLink("Sign in", "Login")
-                    </li>
-                    <li>
-                        @Html.ActionLink("Sign Up", "Register")
+                        @Html.ActionLink("Register", "Register")
                     </li>
                 </ul>
             </div>

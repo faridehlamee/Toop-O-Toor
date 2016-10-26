@@ -1,6 +1,6 @@
 ﻿
 @{
-    Layout = null;
+    ViewBag.Title = "Index";
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -65,11 +65,23 @@
                         <a class="page-scroll" href="#contact">Contact</a>
                     </li>
                     
+                    @{
+                        if (Request.IsAuthenticated)
+                        {
+
+
+                            <li><span class="label label-info">@Html.Raw(User.Identity.Name)</span></li>
+                            <li><a href="@Url.Action("Logout")"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                        }
+                        else
+                        {
+                            <li><a href="@Url.Action("Login")"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                        }
+
+                    }
+
                     <li>
-                        @Html.ActionLink("Sign in", "Login")
-                    </li>
-                    <li>
-                        @Html.ActionLink("Sign Up", "Register")
+                        @Html.ActionLink("Register", "Register")
                     </li>
                 </ul>
             </div>

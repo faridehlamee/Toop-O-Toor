@@ -8,6 +8,7 @@ using System.Net;
 using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using volleyballMVC.ViewModels;
 
 namespace volleyballMVC.Controllers
@@ -78,19 +79,32 @@ namespace volleyballMVC.Controllers
                 UserName = newUser.UserName,
                 Email = newUser.Email
             };
-            IdentityResult result = manager.Create(identityUser, newUser.Password);
-
-            if (result.Succeeded)
+            //this query finds if there is a another user with this userName or no
+            var user = manager.Users.FirstOrDefault(u => u.UserName == newUser.UserName);
+           
+            if (user != null)
             {
-                var authenticationManager
-                                  = HttpContext.Request.GetOwinContext().Authentication;
-                var userIdentity = manager.CreateIdentity(identityUser,
-                                           DefaultAuthenticationTypes.ApplicationCookie);
-                authenticationManager.SignIn(new AuthenticationProperties() { },
-                                             userIdentity);
+                ViewBag.ExistedUser = "This user name is already existed! Try another user name.";
+                return View();
+                
             }
+            else
+            {
+                IdentityResult result = manager.Create(identityUser, newUser.Password);
+
+                if (result.Succeeded)
+                {
+                    var authenticationManager
+                                      = HttpContext.Request.GetOwinContext().Authentication;
+                    var userIdentity = manager.CreateIdentity(identityUser,
+                                               DefaultAuthenticationTypes.ApplicationCookie);
+                    authenticationManager.SignIn(new AuthenticationProperties() { },
+                                                 userIdentity);
+                }
+            }
+           
             ViewBag.Register = "Resister";
-            return RedirectToAction("Index");
+            return RedirectToAction("SecureArea");
         }
         [Authorize]
         public ActionResult SecureArea()

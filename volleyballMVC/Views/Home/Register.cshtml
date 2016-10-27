@@ -4,6 +4,17 @@
     ViewBag.Title = "Register";
 }
 
+<br/><br/><br/><br/><br/>
+@{
+    if (ViewBag.ExistedUser != null)
+    {
+        <div class="alert alert-danger">
+            <strong>Oops!</strong> @ViewBag.ExistedUser
+            <button type="button" class="close" data-dismiss="alert">×</button>
+        </div>
+    }
+
+}
 
 @using (Html.BeginForm()) 
 {
@@ -57,3 +68,4 @@
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<link href="~/css/style.css" rel="stylesheet" />

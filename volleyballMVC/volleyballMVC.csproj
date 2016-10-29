@@ -232,6 +232,7 @@
     <Content Include="js\agency.min.js" />
     <Content Include="js\contact_me.js" />
     <Content Include="js\jqBootstrapValidation.js" />
+    <Content Include="js\myJavaScript.js" />
     <Content Include="scripts\ai.0.15.0-build58334.js" />
     <Content Include="scripts\ai.0.15.0-build58334.min.js" />
     <None Include="scripts\jquery-1.10.2.intellisense.js" />
@@ -341,7 +342,6 @@
     <Content Include="vendor\font-awesome\fonts\icomoon.ttf" />
     <Content Include="vendor\font-awesome\fonts\icomoon.woff" />
     <Content Include="Views\Home\Index.cshtml" />
-    <None Include="Views\Home\Index1.cshtml" />
     <Content Include="Views\Home\Login.cshtml" />
     <Content Include="Views\Home\Register.cshtml" />
     <Content Include="Views\Home\SecureArea.cshtml" />

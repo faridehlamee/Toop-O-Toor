@@ -55,11 +55,10 @@
 
                     }
                     
+                   
                      @{
                          if (Request.IsAuthenticated)
                          {
-
-                            <li><a href="@Url.Action("Index")"><span class="glyphicon glyphicon-home"></span> Home</a></li>
                             <li><span class="label label-info">@Html.Raw(User.Identity.Name)</span></li>
                             <li><a href="@Url.Action("Logout")"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
                             

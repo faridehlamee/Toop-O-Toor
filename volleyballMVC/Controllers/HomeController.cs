@@ -15,6 +15,14 @@ namespace volleyballMVC.Controllers
 {
     public class HomeController : Controller
     {
+
+        const string EMAIL_CONFIRMATION = "EmailConfirmation";
+        const string PASSWORD_RESET = "ResetPassword";
+
+        void CreateTokenProvider(UserManager<IdentityUser> manager, string tokenType)
+        {
+            manager.UserTokenProvider = new EmailTokenProvider<IdentityUser>();
+        }
         [HttpGet]
         public ActionResult Index()
         {
@@ -38,8 +46,8 @@ namespace volleyballMVC.Controllers
 
             if (ModelState.IsValid)
             {
-                if (identityUser != null)
-                {
+                if(ValidLogin(login))
+                    {
                     IAuthenticationManager authenticationManager
                                            = HttpContext.GetOwinContext().Authentication;
                     authenticationManager
@@ -58,7 +66,8 @@ namespace volleyballMVC.Controllers
                     return RedirectToAction("SecureArea", "Home");
                 }
             }
-            ViewBag.errorLogin = "Oops! You have entered invalid credentials. Please try again! ";
+            //TempData["MaxFailedAccess"] = manager.MaxFailedAccessAttemptsBeforeLockout;
+          //  ViewBag.errorLogin = "Oops! You have entered invalid credentials. Please try again! ";
             return View();
         }
         [HttpGet]
@@ -73,7 +82,13 @@ namespace volleyballMVC.Controllers
         {
             ViewBag.Register = "";
             var userStore = new UserStore<IdentityUser>();
-            var manager = new UserManager<IdentityUser>(userStore);
+            UserManager<IdentityUser> manager = new UserManager<IdentityUser>(userStore)
+            {
+                UserLockoutEnabledByDefault = true,
+                DefaultAccountLockoutTimeSpan = new TimeSpan(0, 2, 0),
+                MaxFailedAccessAttemptsBeforeLockout = 3
+            };
+
             var identityUser = new IdentityUser()
             {
                 UserName = newUser.UserName,
@@ -102,7 +117,7 @@ namespace volleyballMVC.Controllers
                                                  userIdentity);
                 }
             }
-           
+            
             ViewBag.Register = "Resister";
             return RedirectToAction("SecureArea");
         }
@@ -120,6 +135,64 @@ namespace volleyballMVC.Controllers
             authenticationManager.SignOut();
             return RedirectToAction("Index", "Home");
         }
+
+        bool ValidLogin(Login login)
+        {
+            UserStore<IdentityUser> userStore = new UserStore<IdentityUser>();
+            UserManager<IdentityUser> userManager = new UserManager<IdentityUser>(userStore)
+            {
+                UserLockoutEnabledByDefault = true,
+                DefaultAccountLockoutTimeSpan = new TimeSpan(0, 2, 0),
+                MaxFailedAccessAttemptsBeforeLockout = 3
+            };
+            var user = userManager.FindByName(login.UserName);
+
+            if (user == null)
+            {
+                ViewBag.errorLogin = "Oops! You have entered invalid credentials. Please try again! ";
+                return false;
+            }
+               
+
+            // User is locked out.
+            if (userManager.SupportsUserLockout && userManager.IsLockedOut(user.Id))
+            {
+                ViewBag.errorLogin = "Oops!You are locked. you can not login up to 2 minutes! ";
+                return false;
+
+            }
+                
+
+            // Validated user was locked out but now can be reset.
+            if (userManager.CheckPassword(user, login.Password))
+            {
+                if (userManager.SupportsUserLockout
+                 && userManager.GetAccessFailedCount(user.Id) > 0)
+                {
+                    userManager.ResetAccessFailedCount(user.Id);
+                }
+            }
+            // Login is invalid so increment failed attempts.
+            else {
+                bool lockoutEnabled = userManager.GetLockoutEnabled(user.Id);
+                if (userManager.SupportsUserLockout && userManager.GetLockoutEnabled(user.Id))
+                {
+                 userManager.AccessFailed(user.Id);
+                    //this number shows the number of failed login
+                    //int i = userManager.GetAccessFailedCount(user.Id);
+                    //if(i == 3)
+                    //{
+                    //    ViewBag.Timeout = "you can not login up to 10 minutes later!";
+
+                    //}
+                    ViewBag.errorLogin = "Oops! GetAccessFailedCount. Please try again! ";
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
     }
 }
 

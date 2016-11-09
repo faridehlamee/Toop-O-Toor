@@ -15,6 +15,24 @@
     }
 
 }
+@{
+    if (ViewBag.Success != null)
+    {
+        <div class="alert alert-success">
+             @ViewBag.Success
+        </div>
+    }
+
+}
+@{
+    if (ViewBag.Failure != null)
+    {
+        <div class="alert alert-warning">
+            @ViewBag.Failure
+        </div>
+    }
+
+}
 
 @using (Html.BeginForm()) 
 {
@@ -63,13 +81,6 @@
         </div>
     </div>
 }
-@Html.Raw(ViewBag.FakeConfirmation)
-<div>
-    @TempData["FakeConfirmation"]
-
-
-</div>
-
 
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
 <script src="~/Scripts/jquery.validate.min.js"></script>

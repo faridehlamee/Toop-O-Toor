@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using volleyballMVC.ViewModels;
+using volleyballMVC.BusinessLogic;
 
 namespace volleyballMVC.Controllers
 {
@@ -116,10 +117,20 @@ namespace volleyballMVC.Controllers
                                                    new { userId = identityUser.Id, code = code },
                                                        protocol: Request.Url.Scheme);
 
-                    string email = "Please confirm your account by clicking this link: <a href=\""
+                    string confirmRegistration = "Please confirm your account by clicking this link: <a href=\""
                                     + callbackUrl + "\">Confirm Registration</a>";
 
-                    ViewBag.FakeConfirmation = email;
+                    MailHelper mailer = new MailHelper();
+                    string response = mailer.EmailFromArvixe(newUser, confirmRegistration);
+
+                    if (response != "Failure sending mail.")
+                    {
+                        ViewBag.Success = response;
+                    }
+                    else
+                    {
+                        ViewBag.Failure = response;
+                    }
 
                 }
             }
